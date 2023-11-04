@@ -1,0 +1,10 @@
+{
+  "name": "@redis-chat-app/common",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "yup": "^0.32.11"
+  }
+}

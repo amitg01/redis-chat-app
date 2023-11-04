@@ -1,27 +1,40 @@
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Button, ButtonGroup, Heading, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useNavigate } from "react-router";
-import * as Yup from "yup";
 import TextField from "../common/TextField";
+import { formSchema } from "@redis-chat-app/common";
 
-const Login = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   return (
     <Formik
       initialValues={{ username: "", password: "" }}
-      validationSchema={Yup.object({
-        username: Yup.string()
-          .required("Username required!")
-          .min(6, "Username too short!")
-          .max(28, "Username too long!"),
-        password: Yup.string()
-          .required("Password required!")
-          .min(6, "Password too short!")
-          .max(28, "Password too long!"),
-      })}
+      validationSchema={formSchema}
       onSubmit={(values, actions) => {
-        alert(JSON.stringify(values, null, 2));
+        const vals = { ...values };
         actions.resetForm();
+        fetch("http://localhost:4000/auth/register", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(vals),
+        })
+          .catch(() => {
+            return;
+          })
+          .then((res) => {
+            if (!res || !res.ok || res.status >= 400) {
+              return;
+            }
+            return res.json();
+          })
+          .then((data) => {
+            if (!data) return;
+            console.log(data);
+          });
       }}
     >
       <VStack
@@ -32,7 +45,7 @@ const Login = () => {
         h="100vh"
         spacing="1rem"
       >
-        <Heading>Log In</Heading>
+        <Heading>Sign Up</Heading>
         <TextField
           name="username"
           placeholder="Enter username"
@@ -49,13 +62,15 @@ const Login = () => {
 
         <ButtonGroup pt="1rem">
           <Button colorScheme="teal" type="submit">
-            Log In
+            Create Account
           </Button>
-          <Button onClick={() => navigate("/register")}>Create Account</Button>
+          <Button onClick={() => navigate("/")} leftIcon={<ArrowBackIcon />}>
+            Back
+          </Button>
         </ButtonGroup>
       </VStack>
     </Formik>
   );
 };
 
-export default Login;
+export default SignUp;
