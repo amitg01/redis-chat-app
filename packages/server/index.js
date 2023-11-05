@@ -4,6 +4,7 @@ import helmet from "helmet";
 import cors from "cors";
 import http from "http";
 import authRouter from "./routes/authRoutes.js";
+import session from "express-session";
 
 const app = express();
 const server = http.createServer(app);
@@ -18,6 +19,21 @@ const io = new Server(server, {
 app.use(helmet());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(json());
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    credentials: true,
+    name: "sid",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.ENVIRONMENT === "production" ? "true" : "auto",
+      httpOnly: true,
+      expires: 1000 * 60 * 60 * 24 * 7,
+      sameSite: process.env.ENVIRONMENT === "production" ? "none" : "lax",
+    },
+  })
+);
 
 app.use("/auth", authRouter);
 
