@@ -6,7 +6,7 @@ import http from "http";
 import authRouter from "./routes/authRoutes.js";
 import session from "express-session";
 import RedisStore from "connect-redis";
-import Redis from "ioredis";
+import redisClient from "./redis.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -17,8 +17,6 @@ const io = new Server(server, {
     credentials: "true",
   },
 });
-
-const redisClient = new Redis();
 
 app.use(helmet());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));

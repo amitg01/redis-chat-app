@@ -28,10 +28,8 @@ const loginAttempt = async (req, res) => {
       res.json({ loggedIn: true, username: req.body.username });
     } else {
       res.json({ loggedIn: false, status: "Wrong username or password!" });
-      console.log("not good");
     }
   } else {
-    console.log("not good");
     res.json({ loggedIn: false, status: "Wrong username or password!" });
   }
 };
