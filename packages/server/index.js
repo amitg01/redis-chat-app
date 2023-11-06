@@ -5,6 +5,8 @@ import cors from "cors";
 import http from "http";
 import authRouter from "./routes/authRoutes.js";
 import session from "express-session";
+import RedisStore from "connect-redis";
+import Redis from "ioredis";
 
 const app = express();
 const server = http.createServer(app);
@@ -16,6 +18,8 @@ const io = new Server(server, {
   },
 });
 
+const redisClient = new Redis();
+
 app.use(helmet());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(json());
@@ -24,6 +28,7 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     credentials: true,
     name: "sid",
+    store: new RedisStore({ client: redisClient }),
     resave: false,
     saveUninitialized: false,
     cookie: {
