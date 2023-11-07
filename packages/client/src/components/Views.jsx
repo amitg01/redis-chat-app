@@ -5,6 +5,7 @@ import { AccountContext } from "./auth/AccountContext";
 import Login from "./auth/Login";
 import SignUp from "./auth/SignUp";
 import PrivateRoutes from "./auth/PrivateRoutes";
+import Home from "./Home";
 
 const Views = () => {
   const { user } = useContext(AccountContext);
@@ -15,7 +16,7 @@ const Views = () => {
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<SignUp />} />
       <Route element={<PrivateRoutes />}>
-        <Route path="/home" element={<Text>Hi welcome home</Text>} />
+        <Route path="/home" element={<Home />} />
       </Route>
       <Route path="*" element={<Login />} />
     </Routes>
