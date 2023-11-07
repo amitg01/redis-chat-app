@@ -11,4 +11,11 @@ const formSchema = object({
     .max(28, "Password too long!"),
 });
 
-export { formSchema };
+const friendSchema = object({
+  friendName: string()
+    .required("Username required")
+    .min(6, "Invalid username!")
+    .max(28, "Invalid username!"),
+});
+
+export { formSchema, friendSchema };
