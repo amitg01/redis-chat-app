@@ -17,7 +17,6 @@ import { useDisclosure } from "@chakra-ui/react";
 const Sidebar = () => {
   const { friendList } = useContext(FriendContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
     <>
       <VStack py="1.4rem">
@@ -42,7 +41,7 @@ const Sidebar = () => {
                 w="10px"
                 h="10px"
               />
-              <Text>{friend}</Text>
+              <Text>{friend.username}</Text>
             </HStack>
           ))}
         </VStack>

@@ -13,7 +13,7 @@ const handleLogin = async (req, res) => {
 
 const loginAttempt = async (req, res) => {
   const potentialLogin = await pool.query(
-    "SELECT id, username, passhash FROM users u WHERE u.username=$1",
+    "SELECT id, username, passhash, userid FROM users u WHERE u.username=$1",
     [req.body.username]
   );
 
@@ -46,7 +46,7 @@ const handleRegister = async (req, res) => {
     // register
     const hashedPass = await bcrypt.hash(req.body.password, 10);
     const newUserQuery = await pool.query(
-      "INSERT INTO users(username, passhash, userid) values($1,$2, $3) RETURNING id, username, userid",
+      "INSERT INTO users(username, passhash, userid) values($1,$2,$3) RETURNING id, username, userid",
       [req.body.username, hashedPass, uuidv4()]
     );
     req.session.user = {
