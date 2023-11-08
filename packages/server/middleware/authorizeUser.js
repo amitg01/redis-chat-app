@@ -1,10 +1,57 @@
+import redisClient from "../redis.js";
+
 const authorizeUser = (socket, next) => {
-  if (!socket.request.session || !socket.request.session.user) {
-    console.log("Bad request!");
+  if (!socket.request.session || !socket?.request.session.user) {
     next(new Error("Not authorized"));
   } else {
+    socket.user = { ...socket.request.session.user };
+    redisClient.hset(
+      `userid:${socket.user.username}`,
+      "userid",
+      socket.user.userid
+    );
     next();
   }
 };
 
-export default authorizeUser;
+const initializeUser = async (socket) => {
+  socket.user = { ...socket.request.session.user };
+  await redisClient.hset(
+    `userid:${socket.user.username}`,
+    "userid",
+    socket.user.userid
+  );
+  const friendList = await redisClient.lrange(
+    `friends:${socket.user.username}`,
+    0,
+    -1
+  );
+  console.log(`${socket.user.username} friends:`, friendList);
+  socket.emit("friends", friendList);
+};
+
+const addFriend = async (socket, friendName, cb) => {
+  if (friendName === socket.user.username) {
+    cb({ done: false, errorMsg: "Cannot add self!" });
+    return;
+  }
+  const friendUserID = await redisClient.hget(`userid:${friendName}`, "userid");
+  const currentFriendList = await redisClient.lrange(
+    `friends:${socket.user.username}`,
+    0,
+    -1
+  );
+  if (!friendUserID) {
+    cb({ done: false, errorMsg: "User doesn't exist!" });
+    return;
+  }
+  if (currentFriendList && currentFriendList.indexOf(friendName) !== -1) {
+    cb({ done: false, errorMsg: "Friend already added!" });
+    return;
+  }
+
+  await redisClient.lpush(`friends:${socket.user.username}`, friendName);
+  cb({ done: true });
+};
+
+export { authorizeUser, addFriend, initializeUser };

@@ -15,7 +15,7 @@ import AddFriendModal from "./AddFriendModal";
 import { useDisclosure } from "@chakra-ui/react";
 
 const Sidebar = () => {
-  const { friendList, setFriendList } = useContext(FriendContext);
+  const { friendList } = useContext(FriendContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -30,13 +30,19 @@ const Sidebar = () => {
         <Divider />
         <VStack as={TabList} w="100%">
           {friendList.map((friend) => (
-            <HStack as={Tab} w="100%" justify="start">
+            <HStack
+              as={Tab}
+              w="100%"
+              justify="start"
+              borderBottom="1px solid gray"
+              key={friend}
+            >
               <Circle
                 bg={friend.connected ? "green.700" : "red.500"}
                 w="10px"
                 h="10px"
               />
-              <Text>{friend.username}</Text>
+              <Text>{friend}</Text>
             </HStack>
           ))}
         </VStack>
