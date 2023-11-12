@@ -2,7 +2,7 @@ import redisClient from "../redis.js";
 
 const authorizeUser = (socket, next) => {
   if (!socket.request.session || !socket?.request.session.user) {
-    next(new Error("Not authorized"));
+    next(new Error("Not authorized!"));
   } else {
     socket.user = { ...socket.request.session.user };
     redisClient.hset(

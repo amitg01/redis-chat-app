@@ -12,6 +12,7 @@ const handleLogin = async (req, res) => {
 };
 
 const loginAttempt = async (req, res) => {
+  console.log("called");
   const potentialLogin = await pool.query(
     "SELECT id, username, passhash, userid FROM users u WHERE u.username=$1",
     [req.body.username]

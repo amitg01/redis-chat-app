@@ -6,5 +6,11 @@
   "private": "true",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "dev:server": "yarn workspace @redis-chat-app/server dev",
+    "dev:client": "yarn workspace @redis-chat-app/client start",
+    "build:client": "yarn workspace @redis-chat-app/client build",
+    "start": "yarn workspace @redis-chat-app/server start"
+  }
 }

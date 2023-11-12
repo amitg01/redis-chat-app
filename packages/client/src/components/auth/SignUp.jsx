@@ -18,7 +18,7 @@ const SignUp = () => {
       onSubmit={(values, actions) => {
         const vals = { ...values };
         actions.resetForm();
-        fetch("http://localhost:4000/auth/register", {
+        fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/register`, {
           method: "POST",
           credentials: "include",
           headers: {
